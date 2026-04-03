@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BikeCity – La città che pedala</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #18a84a;
+      --green-light: #e6f9ee;
+      --dark: #1a2e22;
+      --mid: #f0f7f2;
+      --card: #ffffff;
+      --border: #c8e6d0;
+      --muted: #6b9a7a;
+      --white: #1a2e22;
+      --accent: #e84d1c;
+      --yellow: #d4a600;
+      --bg: #f5fbf7;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(245,251,247,.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem;
+      letter-spacing: .06em;
+      color: var(--green);
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .85rem;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+
+    /* ── HERO ── */
+    #home {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 100px 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 30%, rgba(24,168,74,.10) 0%, transparent 70%),
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(24,168,74,.08) 39px, rgba(24,168,74,.08) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(24,168,74,.08) 39px, rgba(24,168,74,.08) 40px);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 860px; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(24,168,74,.12);
+      border: 1px solid rgba(24,168,74,.3);
+      color: var(--green);
+      font-size: .78rem;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: .35rem 1.1rem;
+      border-radius: 999px;
+      margin-bottom: 2rem;
+      animation: fadeUp .6s ease both;
+    }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 9rem);
+      line-height: .92;
+      letter-spacing: .03em;
+      color: var(--dark);
+      animation: fadeUp .7s .1s ease both;
+    }
+    h1 span { color: var(--green); }
+    .hero-sub {
+      max-width: 560px;
+      margin: 1.8rem auto 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      font-weight: 300;
+      animation: fadeUp .7s .2s ease both;
+    }
+    .hero-ctas {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      margin-top: 2.8rem;
+      animation: fadeUp .7s .3s ease both;
+    }
+    .btn-primary {
+      background: var(--green);
+      color: var(--dark);
+      font-weight: 700;
+      font-size: .9rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: .85rem 2.2rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(24,168,74,.35);
+    }
+    .btn-outline {
+      border: 1px solid var(--border);
+      color: var(--dark);
+      font-weight: 500;
+      font-size: .9rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: .85rem 2.2rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── SECTIONS SHARED ── */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: .72rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: .8rem;
+    }
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      line-height: 1;
+      letter-spacing: .03em;
+      margin-bottom: 1.2rem;
+      color: var(--dark);
+    }
+    .lead {
+      color: var(--muted);
+      max-width: 620px;
+      font-size: 1.05rem;
+      font-weight: 300;
+      margin-bottom: 3.5rem;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ── IL PROBLEMA ── */
+    #problema { background: var(--mid); }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    .problem-card {
+      background: var(--card);
+      padding: 2.5rem 2rem;
+      transition: background .2s;
+    }
+    .problem-card:hover { background: #eaf6ee; }
+    .problem-icon { font-size: 2.6rem; margin-bottom: 1rem; }
+    .problem-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem;
+      letter-spacing: .04em;
+      color: var(--dark);
+      margin-bottom: .6rem;
+    }
+    .problem-card p { color: var(--muted); font-size: .95rem; }
+    .why-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--green);
+      border-radius: 8px;
+      padding: 2rem 2.5rem;
+    }
+    .why-box h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: var(--green);
+      margin-bottom: .8rem;
+    }
+    .why-box p { color: var(--muted); }
+
+    /* ── SOLUZIONI ── */
+    #soluzioni { background: var(--bg); }
+    .solutions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .sol-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+    }
+    .sol-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 20%, rgba(24,168,74,.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .sol-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(24,168,74,.4);
+      box-shadow: 0 12px 40px rgba(24,168,74,.12);
+    }
+    .sol-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+    .sol-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.55rem;
+      letter-spacing: .04em;
+      margin-bottom: .7rem;
+      color: var(--dark);
+    }
+    .sol-card p { color: var(--muted); font-size: .9rem; margin-bottom: .9rem; }
+    .sol-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: .68rem;
+      background: rgba(24,168,74,.1);
+      color: var(--green);
+      border: 1px solid rgba(24,168,74,.25);
+      border-radius: 4px;
+      padding: .2rem .55rem;
+    }
+    .tag.orange {
+      background: rgba(232,77,28,.1);
+      color: var(--accent);
+      border-color: rgba(232,77,28,.25);
+    }
+    .tag.yellow {
+      background: rgba(212,166,0,.1);
+      color: var(--yellow);
+      border-color: rgba(212,166,0,.25);
+    }
+
+    /* ── COME FUNZIONA ── */
+    #come-funziona { background: var(--mid); }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0;
+      position: relative;
+    }
+    .step {
+      padding: 2.5rem 1.5rem 2.5rem 0;
+      position: relative;
+    }
+    .step-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      line-height: 1;
+      color: rgba(24,168,74,.15);
+      margin-bottom: .3rem;
+    }
+    .step h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--dark);
+      margin-bottom: .5rem;
+    }
+    .step p { color: var(--muted); font-size: .88rem; }
+    .step::after {
+      content: '→';
+      position: absolute;
+      right: 0; top: 50%;
+      transform: translateY(-50%);
+      color: var(--green);
+      font-size: 1.5rem;
+    }
+    .step:last-child::after { display: none; }
+
+    /* ── ISPIRAZIONI ── */
+    #ispirazioni { background: var(--bg); }
+    .inspo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 3rem;
+    }
+    .inspo-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.8rem 1.5rem;
+      background: var(--card);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .inspo-card:hover { border-color: rgba(24,168,74,.4); box-shadow: 0 4px 20px rgba(24,168,74,.1); }
+    .inspo-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: var(--green);
+      margin-bottom: .5rem;
+    }
+    .inspo-card p { color: var(--muted); font-size: .88rem; }
+    .inspo-callout {
+      background: linear-gradient(135deg, rgba(24,168,74,.08), rgba(24,168,74,.02));
+      border: 1px solid rgba(24,168,74,.2);
+      border-radius: 10px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+    .inspo-callout p { color: #3a6845; font-size: 1rem; max-width: 640px; margin: 0 auto; }
+    .inspo-callout strong { color: var(--green); }
+
+    /* ── TECNOLOGIA ── */
+    #tecnologia { background: var(--mid); }
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .tech-item {
+      display: flex; gap: 1.2rem; align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    .tech-ico {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+    .tech-item h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      margin-bottom: .3rem;
+      color: var(--dark);
+    }
+    .tech-item p { color: var(--muted); font-size: .85rem; }
+
+    /* ── IMPATTO ── */
+    #impatto { background: var(--bg); }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    .stat-box {
+      background: var(--card);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      color: var(--green);
+      line-height: 1;
+    }
+    .stat-label { color: var(--muted); font-size: .85rem; margin-top: .3rem; }
+    .impact-text { color: var(--muted); max-width: 700px; }
+
+    /* ── CONTATTI ── */
+    #contatti { background: var(--mid); }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .team-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .team-avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(24,168,74,.2), rgba(24,168,74,.05));
+      border: 2px solid rgba(24,168,74,.3);
+      display: grid; place-items: center;
+      font-size: 1.8rem;
+      margin: 0 auto 1rem;
+    }
+    .team-card h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      color: var(--dark);
+      margin-bottom: .3rem;
+    }
+    .team-card span { color: var(--muted); font-size: .82rem; }
+    .school-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .school-box .ico { font-size: 2.5rem; }
+    .school-box h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      color: var(--green);
+      margin-bottom: .3rem;
+    }
+    .school-box p { color: var(--muted); font-size: .9rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: rgba(255,255,255,.5);
+      font-size: .82rem;
+    }
+    footer strong { color: var(--green); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── COUNTER ANIMATION ── */
+    .counter { display: inline-block; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 0 1.2rem; }
+      .nav-links { display: none; }
+      .step::after { display: none; }
+      .steps { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🚲 Bike Future Challenge</div>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#problema">Problema</a></li>
+    <li><a href="#soluzioni">Soluzioni</a></li>
+    <li><a href="#come-funziona">Come funziona</a></li>
+    <li><a href="#ispirazioni">Ispirazioni</a></li>
+    <li><a href="#impatto">Impatto</a></li>
+    <li><a href="#contatti">Team</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🌐 Progetto Scolastico · 2026</div>
+    <h1><span>Bike</span>City<br>La città<br>che pedala</h1>
+    <p class="hero-sub">Rendiamo la bicicletta più usata, più sicura e più divertente. Un’app innovativa per rendere la bici la scelta migliore ogni giorno</p>
+    <div class="hero-ctas">
+      <a href="#soluzioni" class="btn-primary">🚴 Scopri le missioni</a>
+      <a href="#come-funziona" class="btn-outline">Unisciti alla sfida →</a>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- IL PROBLEMA -->
+<section id="problema">
+  <div class="container">
+    <div class="section-tag">// il problema</div>
+    <h2>Perché la città<br>deve cambiare</h2>
+    <p class="lead">Le nostre città sono intasate, inquinate e sempre meno vivibili. La bici è la soluzione — ma troppo spesso viene ignorata.</p>
+
+    <div class="problem-grid reveal">
+      <div class="problem-card">
+        <div class="problem-icon">🚗</div>
+        <h3>Traffico</h3>
+        <p>Le auto occupano il 90% delle strade urbane, rallentano ogni spostamento e rendono le città caotiche e stressanti.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🌍</div>
+        <h3>Inquinamento</h3>
+        <p>Il trasporto su strada è responsabile di oltre il 20% delle emissioni di CO₂ in Italia. Ogni auto ferma aggrava il problema.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🚲</div>
+        <h3>Bici poco usata</h3>
+        <p>Nonostante sia ecologica, economica e sana, la bici copre meno del 5% degli spostamenti urbani. Un potenziale enorme sprecato.</p>
+      </div>
+    </div>
+
+    <div class="why-box reveal">
+      <h3>Perché è importante cambiare adesso</h3>
+      <p>Il cambiamento climatico non aspetta. Se non modifichiamo le nostre abitudini di spostamento, le nostre città diventeranno sempre più invivibili. La bici è uno degli strumenti più potenti che abbiamo — economico, sano, a zero emissioni.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SOLUZIONI -->
+<section id="soluzioni">
+  <div class="container">
+    <div class="section-tag">// soluzioni</div>
+    <h2>Il nostro<br>ecosistema</h2>
+    <p class="lead">L’idea di un’app che unisce sette soluzioni per rendere la bici protagonista della città. Dalla classifica ai sensori, ogni elemento motiva e misura.
+    <div class="solutions-grid">
+
+      <div class="sol-card reveal">
+        <div class="sol-icon">🏆</div>
+        <h3>Classifica Ciclisti</h3>
+        <p>Un sistema di gamification che premia chi pedala di più. Classifica utenti, scuole e quartieri in tempo reale. Tracciamento km tramite app GPS.</p>
+        <div class="sol-tags">
+          <span class="tag">Gamification</span>
+          <span class="tag">GPS</span>
+          <span class="tag">Classifica</span>
+        </div>
+      </div>
+
+      <div class="sol-card reveal">
+        <div class="sol-icon">🏫</div>
+        <h3>Sfide tra Scuole</h3>
+        <p>Competizioni a tempo tra scuole e quartieri. Chi accumula più km vince premi reali.</p>
+        <div class="sol-tags">
+          <span class="tag yellow">Competizioni</span>
+          <span class="tag yellow">Premi</span>
+          <span class="tag">Community</span>
+        </div>
+      </div>
+
+      <div class="sol-card reveal">
+        <div class="sol-icon">🗺️</div>
+        <h3>Missioni in Città</h3>
+        <p>Percorsi tematici con obiettivi da raggiungere. Ogni missione completata assegna badge e punti. La città diventa un gioco da esplorare.</p>
+        <div class="sol-tags">
+          <span class="tag">Badge</span>
+          <span class="tag">Percorsi</span>
+          <span class="tag orange">Punti XP</span>
+        </div>
+      </div>
+
+      <div class="sol-card reveal">
+        <div class="sol-icon">🔒</div>
+        <h3>Parcheggi Intelligenti</h3>
+        <p>Stazioni sicure con QR code, ricarica per e-bike ⚡ e pannelli solari ☀️.</p>
+        <div class="sol-tags">
+          <span class="tag yellow">☀️ Solare</span>
+          <span class="tag">QR Code</span>
+          <span class="tag orange">E-Bike ⚡</span>
+        </div>
+      </div>
+
+      <div class="sol-card reveal">
+        <div class="sol-icon">📺</div>
+        <h3>BikeCity Live</h3>
+        <p>Schermi sulle piste ciclabili mostrano dati in tempo reale: CO₂ risparmiata, km totali percorsi oggi, numero di ciclisti attivi.</p>
+        <div class="sol-tags">
+          <span class="tag">Dati Live</span>
+          <span class="tag">CO₂ Counter</span>
+          <span class="tag orange">IoT</span>
+        </div>
+      </div>
+
+      <div class="sol-card reveal">
+        <div class="sol-icon">📊</div>
+        <h3>Sensori Bici</h3>
+        <p>Sensori installati sulle piste ciclabili contano il flusso di ciclisti. I dati raccolti servono a migliorare le infrastrutture e pianificare nuove rotte.</p>
+        <div class="sol-tags">
+          <span class="tag">Sensori IoT</span>
+          <span class="tag">Big Data</span>
+          <span class="tag">Analytics</span>
+        </div>
+      </div>
+
+      <div class="sol-card reveal">
+        <div class="sol-icon">🎁</div>
+        <h3>Premi e Sconti</h3>
+        <p>I punti guadagnati si trasformano in sconti reali da negozi locali partner. Un circolo virtuoso che premia chi sceglie la bici ogni giorno.</p>
+        <div class="sol-tags">
+          <span class="tag yellow">Sconti</span>
+          <span class="tag">Negozi locali</span>
+          <span class="tag orange">Rewards</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- COME FUNZIONA -->
+<section id="come-funziona">
+  <div class="container">
+    <div class="section-tag">// come funziona</div>
+    <h2>4 passi per<br>iniziare</h2>
+    <p class="lead">Semplice come andare in bici. Registrati, pedala, guadagna punti, usa i premi.</p>
+
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Registrazione</h3>
+        <p>Crea il tuo profilo. Inserisci nome, scuola o quartiere di appartenenza.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Traccia i km</h3>
+        <p>Attiva il GPS integrato prima di ogni percorso. L'app registra automaticamente distanza, velocità e rotta.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Guadagna punti</h3>
+        <p>Ogni km vale punti. Missioni e sfide moltiplicano il punteggio. Scala la classifica del tuo quartiere.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>Usa i premi</h3>
+        <p>Converti i tuoi punti in sconti presso i negozi partner. Più pedali, più risparmi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ISPIRAZIONI -->
+<section id="ispirazioni">
+  <div class="container">
+    <div class="section-tag">// ispirazioni</div>
+    <h2>Piattaforme<br>esistenti</h2>
+    <p class="lead">Ci siamo ispirati a diversi siti già esistenti:</p>
+    <div class="inspo-grid reveal">
+      <div class="inspo-card">
+        <div class="inspo-name">Strava</div>
+        <p>L'app più famosa per tracciare attività sportive, creare classifiche e organizzare sfide tra utenti.</p>
+      </div>
+      <div class="inspo-card">
+        <div class="inspo-name">Komoot</div>
+        <p>Permette di scoprire percorsi in bici e pianificare itinerari personalizzati in base al terreno.</p>
+      </div>
+      <div class="inspo-card">
+        <div class="inspo-name">Bike Citizens</div>
+        <p>Navigazione dedicata ai ciclisti urbani con incentivi per scegliere la bici come mezzo quotidiano.</p>
+      </div>
+      <div class="inspo-card">
+        <div class="inspo-name">Love to Ride</div>
+        <p>Organizza sfide tra città e aziende per incentivare l'uso della bici con classifiche e premi.</p>
+      </div>
+    </div>
+
+    <div class="inspo-callout reveal">
+      <p>Esistono già piattaforme simili, ma <strong>l'idea della nostra app vuole unire tutte queste funzionalità in un unico sistema più completo</strong>, pensato specificamente per la realtà della città italiana: parcheggi intelligenti, schermi live sulle piste, sensori IoT e collaborazioni con negozi locali.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TECNOLOGIA -->
+<section id="tecnologia">
+  <div class="container">
+    <div class="section-tag">// tecnologia</div>
+    <h2>Stack<br>tecnologico</h2>
+    <p class="lead">L'app è costruita su tecnologie moderne e accessibili. Ogni componente serve un obiettivo preciso.</p>
+
+    <div class="tech-grid reveal">
+      <div class="tech-item">
+        <div class="tech-ico">📱</div>
+        <div>
+          <h4>App Mobile</h4>
+          <p>Disponibile su iOS e Android. Interfaccia intuitiva per tracking, missioni e classifica.</p>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-ico">🛰️</div>
+        <div>
+          <h4>GPS Tracking</h4>
+          <p>Registrazione precisa di ogni percorso. Calcolo automatico di distanza, velocità e calorie.</p>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-ico">📡</div>
+        <div>
+          <h4>Sensori IoT</h4>
+          <p>Installati sulle piste ciclabili. Contano il flusso di bici e inviano dati al cloud in tempo reale.</p>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-ico">🗄️</div>
+        <div>
+          <h4>Database Cloud</h4>
+          <p>Gestione di utenti, punteggi, missioni e classifiche. Scalabile per tutta la città.</p>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-ico">🖥️</div>
+        <div>
+          <h4>Schermi Live</h4>
+          <p>Display sulle piste mostrano statistiche in tempo reale: km, CO₂ risparmiata, ciclisti attivi.</p>
+        </div>
+      </div>
+      <div class="tech-item">
+        <div class="tech-ico">☀️</div>
+        <div>
+          <h4>Energia Solare</h4>
+          <p>I parcheggi intelligenti usano pannelli fotovoltaici per ricaricare e-bike a emissioni zero.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- IMPATTO -->
+<section id="impatto">
+  <div class="container">
+    <div class="section-tag">// impatto ambientale</div>
+    <h2>Il cambiamento<br>che vogliamo</h2>
+    <p class="lead">Ogni km in bici invece che in auto fa la differenza. Su scala urbana, l'impatto è enorme.</p>
+
+    <div class="stats-row reveal">
+      <div class="stat-box">
+        <div class="stat-num counter" data-target="21">0</div>
+        <div class="stat-label">% emissioni CO₂<br>da trasporto urbano</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num counter" data-target="150">0</div>
+        <div class="stat-label">grammi CO₂ risparmiate<br>per ogni km in bici</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num counter" data-target="5">0</div>
+        <div class="stat-label">% spostamenti<br>attuali in bici</div>
+      </div>
+    </div>
+
+    <div class="impact-text reveal">
+      <p>Se solo il 10% degli automobilisti urbani scegliesse la bici per gli spostamenti brevi (under 5 km), le città italiane risparmierebbero <strong style="color:var(--green)">milioni di tonnellate di CO₂</strong> ogni anno. Meno traffico significa anche strade più sicure, aria più pulita e una qualità della vita nettamente superiore.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTATTI / TEAM -->
+<section id="contatti">
+  <div class="container">
+    <div class="section-tag">// team</div>
+    <h2>Chi c'è<br>dietro l'idea</h2>
+    <p class="lead">Un gruppo di studenti convinti che la tecnologia possa rendere le città migliori — partendo dalla bici.</p>
+
+    <div class="team-grid reveal">
+      <div class="team-card">
+        <div class="team-avatar">👩‍💻</div>
+        <h4>Romeghea Ovidiu</h4>
+        <span></span>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👨‍💻</div>
+        <h4>Colnago Emanuele</h4>
+        <span></span>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👨‍💻</div>
+        <h4>Pilenga Marco</h4>
+        <span></span>
+      </div>
+    </div>
+
+    <div class="school-box reveal">
+      <div class="ico">🏫</div>
+      <div>
+        <h4>Istituto</h4>
+        <p>Centro Studi Leonardo Da Vinci</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <strong>Bike Future Challenge</strong> · Progetto scolastico</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Counter animation
+  function animateCounter(el) {
+    const target = +el.dataset.target;
+    const duration = 1400;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = Math.floor(current);
+    }, 16);
+  }
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCounter(e.target);
+        counterObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+</script>
+</body>
+</html>
